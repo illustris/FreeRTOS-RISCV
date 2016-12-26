@@ -118,18 +118,20 @@ static void prvTaskExitError( void );
  * Reads previous timer compare register, and adds tickrate */
 static void prvSetNextTimerInterrupt(void)
 {
-	__asm volatile("csrr t0,mtimecmp");
+	__asm volatile("add x2,x0,%0"::"r"(0x40000000));
+    __asm volatile("ld t0,0(x2)");
 	__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("csrw mtimecmp,t0");
+	__asm volatile("sd t0,0(x2)");
 }
 /*-----------------------------------------------------------*/
 
 /* Sets and enable the timer interrupt */
 void vPortSetupTimer(void)
 {
-	__asm volatile("csrr t0,mtime");
+	__asm volatile("add x2,x0,%0"::"r"(0x40000000));
+    __asm volatile("ld t0,0(x2)");
 	__asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("csrw mtimecmp,t0");
+	__asm volatile("sd t0,0(x2)");
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));

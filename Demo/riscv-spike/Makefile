@@ -58,7 +58,7 @@ include ./Makefile.inc
 
 # Root of RISC-V tools installation. Note that we expect to find the spike
 # simulator header files here under $(RISCV)/include/spike .
-RISCV = /opt/riscv
+RISCV = /home/illustris/rv19bin
 
 FREERTOS_SRC = \
 	$(FREERTOS_SOURCE_DIR)/croutine.c \

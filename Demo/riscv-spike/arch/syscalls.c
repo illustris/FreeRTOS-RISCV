@@ -85,9 +85,9 @@ static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 	magic_mem[2] = arg1;
 	magic_mem[3] = arg2;
 	__sync_synchronize();
-	write_csr(mtohost, (long) magic_mem);
-	while (swap_csr(mfromhost, 0) == 0)
-		;
+	////write_csr(mtohost, (long) magic_mem);
+	////while (swap_csr(mfromhost, 0) == 0)
+	////	;
 	return magic_mem[0];
 }
 /*-----------------------------------------------------------*/
@@ -95,7 +95,7 @@ static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 /* Exit systemcall */
 static void prvSyscallExit(long code)
 {
-	write_csr(mtohost, (code << 1) | 1);
+	////write_csr(mtohost, (code << 1) | 1);
 	for(;;) { }
 }
 /*-----------------------------------------------------------*/

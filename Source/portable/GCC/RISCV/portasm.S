@@ -197,7 +197,7 @@
 	LOAD	x31, 30 * REGBYTES(sp)
 
 	addi	sp, sp, REGBYTES * 32
-	eret
+	mret
 	.endm
 
 /* Macro for restoring task context */

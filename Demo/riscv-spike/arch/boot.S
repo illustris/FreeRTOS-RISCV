@@ -183,10 +183,10 @@ interrupt:
 
 	/* Interupt is timer interrupt */
 	j		TIMER_CMP_INT
-	eret
+	mret
 softwareInterrupt:
 	/* Interupt is software interrupt */
-	eret
+	mret
 
 
 /* For when a trap is fired */
@@ -275,7 +275,7 @@ trap_entry:
 	LOAD x31, 31*REGBYTES(sp)
 
 	addi sp, sp, REGBYTES*31
-	eret
+	mret
 
 /* Fills memory blocks */
 fill_block:
