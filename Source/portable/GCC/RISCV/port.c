@@ -78,6 +78,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
+#include "port.h"
 
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -91,6 +92,10 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 #ifdef __gracefulExit
 BaseType_t xStartContext[31] = {0};
 #endif
+
+volatile uint64_t* mtime;
+uint64_t* timecmp;
+uintptr_t mem_size;
 
 /*
  * Handler for timer interrupt
@@ -118,20 +123,24 @@ static void prvTaskExitError( void );
  * Reads previous timer compare register, and adds tickrate */
 static void prvSetNextTimerInterrupt(void)
 {
-	__asm volatile("add x2,x0,%0"::"r"(0x40000000));
-    __asm volatile("ld t0,0(x2)");
-	__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("sd t0,0(x2)");
+    //void *mtime=(void*)0x0000000040000000;
+    mtime += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
+    //__asm volatile("li x2,%0"::"r"(0x40000000));
+	//__asm volatile("ld t0,0(x2)");
+	//__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
+	//__asm volatile("sd t0,0(x2)");
 }
 /*-----------------------------------------------------------*/
 
 /* Sets and enable the timer interrupt */
 void vPortSetupTimer(void)
 {
-	__asm volatile("add x2,x0,%0"::"r"(0x40000000));
-    __asm volatile("ld t0,0(x2)");
-	__asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	__asm volatile("sd t0,0(x2)");
+	//__asm volatile("li x2,%0"::"r"(0x40000000));
+	//__asm volatile("ld t0,0(x2)");
+	//__asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
+	//__asm volatile("sd t0,0(x2)");
+    //void *mtime=(void*)0x0000000040000000;
+    mtime += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));

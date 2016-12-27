@@ -82,6 +82,10 @@
 # define REGBYTES 4
 #endif
 
+# define STORE    sd
+# define LOAD     ld
+# define REGBYTES 8
+
 .section .text,"ax",@progbits
 	.align 6
 user_trap_entry:

@@ -58,7 +58,7 @@ include ./Makefile.inc
 
 # Root of RISC-V tools installation. Note that we expect to find the spike
 # simulator header files here under $(RISCV)/include/spike .
-RISCV = /home/illustris/rv19bin
+RISCV = /opt/riscv
 
 FREERTOS_SRC = \
 	$(FREERTOS_SOURCE_DIR)/croutine.c \
@@ -82,6 +82,7 @@ PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/port.c
 PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/portasm.S
 
 DEMO_SRC = \
+	arch/configstring.c \
 	arch/syscalls.c \
 	arch/clib.c \
 	main.c
