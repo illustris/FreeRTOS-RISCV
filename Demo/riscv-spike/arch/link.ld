@@ -79,8 +79,8 @@ _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x1000;
  * Define memory layout
  ****************************************************************************/
 MEMORY {
-	imem : ORIGIN = 0x00000000, LENGTH = 0x00020000
-	dmem : ORIGIN = 0x08000000, LENGTH = 0x00020000
+	imem : ORIGIN = 0x80000000, LENGTH = 0x00020000
+	dmem : ORIGIN = 0x88000000, LENGTH = 0x00020000
 }
 
 /* Specify the default entry point to the program */
@@ -92,7 +92,7 @@ ENTRY(_mstart)
  ****************************************************************************/
 SECTIONS {
 	.text : {
-		. = 0x100;
+		. = 0x80000000;
 	    *boot.o(.text);
 		*(.text);
 		*(.text.*);
