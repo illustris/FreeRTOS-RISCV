@@ -67,7 +67,8 @@ FREERTOS_SRC = \
 	$(FREERTOS_SOURCE_DIR)/tasks.c \
 	$(FREERTOS_SOURCE_DIR)/timers.c \
 	$(FREERTOS_SOURCE_DIR)/event_groups.c \
-	$(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_2.c 
+	$(FREERTOS_SOURCE_DIR)/portable/MemMang/heap_2.c \
+	$(FREERTOS_SOURCE_DIR)/string.c
 
 
 APP_SOURCE_DIR	= ../Common/Minimal
@@ -99,7 +100,7 @@ INCLUDES = \
 CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin \
-	-D__gracefulExit
+	-D__gracefulExit -fPIC -mcmodel=medany
 
 GCCVER 	= $(shell $(GCC) --version | grep gcc | cut -d" " -f9)
 
@@ -114,7 +115,7 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-LDFLAGS	 = -T arch/link.ld -nostartfiles -static
+LDFLAGS	 = -T arch/link.ld -nostartfiles -static -nostdlib
 LIBS	 = -L$(CCPATH)/lib/gcc/$(TARGET)/$(GCCVER) \
 		   -L$(CCPATH)/$(TARGET)/lib \
 		   -lc
