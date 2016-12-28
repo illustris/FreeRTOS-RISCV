@@ -78,7 +78,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "port.h"
+#include "configstring.h"
 
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -95,7 +95,10 @@ BaseType_t xStartContext[31] = {0};
 
 volatile uint64_t* mtime;
 uint64_t* timecmp;
-uintptr_t mem_size;
+
+void parse_config_string(void);
+static void query_rtc(const char* config_string);
+
 
 /*
  * Handler for timer interrupt
@@ -123,24 +126,15 @@ static void prvTaskExitError( void );
  * Reads previous timer compare register, and adds tickrate */
 static void prvSetNextTimerInterrupt(void)
 {
-    //void *mtime=(void*)0x0000000040000000;
-    mtime += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
-    //__asm volatile("li x2,%0"::"r"(0x40000000));
-	//__asm volatile("ld t0,0(x2)");
-	//__asm volatile("add t0,t0,%0" :: "r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	//__asm volatile("sd t0,0(x2)");
+    timecmp += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
 }
 /*-----------------------------------------------------------*/
 
 /* Sets and enable the timer interrupt */
 void vPortSetupTimer(void)
 {
-	//__asm volatile("li x2,%0"::"r"(0x40000000));
-	//__asm volatile("ld t0,0(x2)");
-	//__asm volatile("add t0,t0,%0"::"r"(configTICK_CLOCK_HZ / configTICK_RATE_HZ));
-	//__asm volatile("sd t0,0(x2)");
-    //void *mtime=(void*)0x0000000040000000;
-    mtime += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
+    parse_config_string();
+    timecmp = mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));
@@ -211,3 +205,25 @@ void vPortSysTickHandler( void )
 	}
 }
 /*-----------------------------------------------------------*/
+
+static void query_rtc(const char* config_string)
+{
+  query_result res = query_config_string(config_string, "rtc{addr");
+  assert(res.start);
+  mtime = (void*)(uintptr_t)get_uint(res);
+}
+
+static void query_timecmp(const char* config_string)
+{
+    query_result res = query_config_string(config_string, "core{0{0{timecmp");
+    assert(res.start);
+    timecmp = (void*)(uintptr_t)get_uint(res);
+}
+
+void parse_config_string()
+{
+  uint32_t addr = *(uint32_t*)CONFIG_STRING_ADDR;
+  const char* s = (const char*)(uintptr_t)addr;
+  query_rtc(s);
+  query_timecmp(s);
+}
