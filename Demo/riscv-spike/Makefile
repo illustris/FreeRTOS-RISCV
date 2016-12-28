@@ -82,7 +82,6 @@ PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/port.c
 PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/portasm.S
 
 DEMO_SRC = \
-	arch/configstring.c \
 	arch/syscalls.c \
 	arch/clib.c \
 	main.c
