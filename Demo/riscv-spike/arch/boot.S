@@ -111,6 +111,9 @@ machine_trap_entry:
 	.globl _mstart
 /* Startup code */
 _mstart:
+    la t0, trap_entry
+    csrw mtvec, t0
+    csrw stvec, t0
     li	x1, 0
     li	x2, 0
     li	x3, 0
@@ -192,7 +195,7 @@ interrupt:
 	mret
 softwareInterrupt:
 	/* Interupt is software interrupt */
-	mret
+	sret
 
 
 /* For when a trap is fired */
@@ -281,7 +284,7 @@ trap_entry:
 	LOAD x31, 31*REGBYTES(sp)
 
 	addi sp, sp, REGBYTES*31
-	mret
+	sret
 
 /* Fills memory blocks */
 fill_block:
