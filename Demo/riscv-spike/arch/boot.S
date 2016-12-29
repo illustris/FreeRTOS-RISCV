@@ -85,6 +85,8 @@
 # define STORE    sd
 # define LOAD     ld
 # define REGBYTES 8
+boot:
+    j _mstart
 
 .section .text,"ax",@progbits
 	.align 6
