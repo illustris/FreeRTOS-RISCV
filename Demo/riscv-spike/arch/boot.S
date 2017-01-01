@@ -86,6 +86,8 @@
 # define LOAD     ld
 # define REGBYTES 8
 boot:
+    li t6, 0x1800
+    csrw mstatus, t6
     j _mstart
 
 .section .text,"ax",@progbits
@@ -284,7 +286,7 @@ trap_entry:
 	LOAD x31, 31*REGBYTES(sp)
 
 	addi sp, sp, REGBYTES*31
-	sret
+	mret
 
 /* Fills memory blocks */
 fill_block:

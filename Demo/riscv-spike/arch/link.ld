@@ -113,6 +113,11 @@ SECTIONS {
        __rodata_end = .;
 	} > dmem
 
+  htif :
+  {
+    *(htif)
+  } > dmem
+
 	.sbss : {
 	   __sbss_start = .;
 	   *(.sbss)

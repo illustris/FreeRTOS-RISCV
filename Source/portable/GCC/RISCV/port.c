@@ -94,7 +94,7 @@ BaseType_t xStartContext[31] = {0};
 #endif
 
 volatile uint64_t* mtime;
-uint64_t* timecmp;
+volatile uint64_t* timecmp;
 
 void parse_config_string(void);
 static void query_rtc(const char* config_string);
@@ -126,7 +126,7 @@ static void prvTaskExitError( void );
  * Reads previous timer compare register, and adds tickrate */
 static void prvSetNextTimerInterrupt(void)
 {
-    timecmp += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
+    *timecmp += configTICK_CLOCK_HZ / configTICK_RATE_HZ;
 }
 /*-----------------------------------------------------------*/
 
@@ -134,7 +134,7 @@ static void prvSetNextTimerInterrupt(void)
 void vPortSetupTimer(void)
 {
     parse_config_string();
-    timecmp = mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
+    *timecmp += *mtime+(configTICK_CLOCK_HZ / configTICK_RATE_HZ);
 
 	/* Enable timer interupt */
 	__asm volatile("csrs mie,%0"::"r"(0x80));

@@ -199,8 +199,10 @@ unsigned long ulErrorFound = pdFALSE;
 
 	if( ulErrorFound != pdFALSE )
 	{
+		__asm volatile("li t6, 0xbeefdead");
 		printf("Error found! \r\n");
 	}else{
+		__asm volatile("li t6, 0xdeadbeef");
 		printf("PASS! \r\n");
 	}
 

@@ -81,7 +81,7 @@
 # define REGBYTES 4
 #endif
 
-#define MSTATUS_PRV1 0x30
+#define MSTATUS_PRV1 0x1800
 
 .global portSAVE_CONTEXT
 .global portRESTORE_CONTEXT
@@ -197,7 +197,7 @@
 	LOAD	x31, 30 * REGBYTES(sp)
 
 	addi	sp, sp, REGBYTES * 32
-	sret
+	mret
 	.endm
 
 /* Macro for restoring task context */
