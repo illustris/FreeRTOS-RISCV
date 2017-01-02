@@ -76,18 +76,25 @@
 #include "encoding.h"
 #include "clib.h"
 
+volatile uint64_t tohost __attribute__((aligned(64)));
+volatile uint64_t fromhost __attribute__((aligned(64)));
+
 /* Relay syscall to host */
 static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 {
 	volatile uint64_t magic_mem[8] __attribute__((aligned(64)));
+    uint64_t oldfromhost;
 	magic_mem[0] = which;
 	magic_mem[1] = arg0;
 	magic_mem[2] = arg1;
 	magic_mem[3] = arg2;
 	__sync_synchronize();
-	////write_csr(mtohost, (long) magic_mem);
-	////while (swap_csr(mfromhost, 0) == 0)
-	////	;
+    tohost = (long) magic_mem;
+    do
+    {
+        oldfromhost = fromhost;
+        fromhost = 0;
+    } while (oldfromhost == 0);
 	return magic_mem[0];
 }
 /*-----------------------------------------------------------*/
@@ -95,7 +102,7 @@ static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 /* Exit systemcall */
 static void prvSyscallExit(long code)
 {
-	////write_csr(mtohost, (code << 1) | 1);
+	tohost = ((code << 1) | 1);
 	for(;;) { }
 }
 /*-----------------------------------------------------------*/
