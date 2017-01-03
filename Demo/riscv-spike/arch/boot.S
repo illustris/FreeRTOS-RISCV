@@ -82,31 +82,10 @@
 # define REGBYTES 4
 #endif
 
-# define STORE    sd
-# define LOAD     ld
-# define REGBYTES 8
 boot:
     li t6, 0x1800
     csrw mstatus, t6
     j _mstart
-
-.section .text,"ax",@progbits
-	.align 6
-user_trap_entry:
-	j	trap_entry
-
-	.align 6
-supervisor_trap_entry:
-	j	trap_entry
-
-	.align 6
-hypervisor_trap_entry:
-	j	trap_entry
-
-	.align 6
-machine_trap_entry:
-	j	trap_entry
-
 
 	.align 6
 	.section .text,"ax",@progbits
@@ -115,7 +94,6 @@ machine_trap_entry:
 _mstart:
     la t0, trap_entry
     csrw mtvec, t0
-    csrw stvec, t0
     li	x1, 0
     li	x2, 0
     li	x3, 0
@@ -197,7 +175,7 @@ interrupt:
 	mret
 softwareInterrupt:
 	/* Interupt is software interrupt */
-	sret
+	mret
 
 
 /* For when a trap is fired */

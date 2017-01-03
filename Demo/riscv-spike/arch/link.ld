@@ -80,7 +80,7 @@ _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x1000;
  ****************************************************************************/
 MEMORY {
 	imem : ORIGIN = 0x80000000, LENGTH = 0x00020000
-	dmem : ORIGIN = 0x88000000, LENGTH = 0x00020000
+	dmem : ORIGIN = 0x80020000, LENGTH = 0x00020000
 }
 
 /* Specify the default entry point to the program */
@@ -112,11 +112,6 @@ SECTIONS {
        *(.gnu.linkonce.r.*)
        __rodata_end = .;
 	} > dmem
-
-  htif :
-  {
-    *(htif)
-  } > dmem
 
 	.sbss : {
 	   __sbss_start = .;
