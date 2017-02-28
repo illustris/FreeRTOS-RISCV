@@ -79,17 +79,26 @@
 volatile uint64_t tohost __attribute__((aligned(64)));
 volatile uint64_t fromhost __attribute__((aligned(64)));
 
+uint64_t zeroExtend(long val)
+{
+	uint64_t ret = val;
+	#if __riscv_xlen == 32
+		ret = (0x00000000ffffffff & val);
+	#endif
+	return ret;
+}
+
 /* Relay syscall to host */
-static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
+static uint64_t prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 {
 	volatile uint64_t magic_mem[8] __attribute__((aligned(64)));
-    uint64_t oldfromhost;
-	magic_mem[0] = which;
-	magic_mem[1] = arg0;
-	magic_mem[2] = arg1;
-	magic_mem[3] = arg2;
+    volatile uint64_t oldfromhost;
+	magic_mem[0] = zeroExtend(which);
+	magic_mem[1] = zeroExtend(arg0);
+	magic_mem[2] = zeroExtend(arg1);
+	magic_mem[3] = zeroExtend(arg2);
 	__sync_synchronize();
-    tohost = (long) magic_mem;
+    tohost = zeroExtend(magic_mem);
     do
     {
         oldfromhost = fromhost;
@@ -102,7 +111,8 @@ static long prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 /* Exit systemcall */
 static void prvSyscallExit(long code)
 {
-	tohost = ((code << 1) | 1);
+	uint64_t zcode = zeroExtend(code);
+	tohost = ((zcode << 1) | 1);
 	for(;;) { }
 }
 /*-----------------------------------------------------------*/

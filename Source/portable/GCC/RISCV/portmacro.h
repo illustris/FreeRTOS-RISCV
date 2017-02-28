@@ -96,7 +96,7 @@ extern "C" {
 #define portSHORT		short
 #define portBASE_TYPE	long
 
-#ifdef __riscv64
+#if __riscv_xlen == 64
 	#define portSTACK_TYPE	uint64_t
 	#define portPOINTER_SIZE_TYPE	uint64_t
 #else
@@ -120,7 +120,7 @@ typedef unsigned long UBaseType_t;
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) (1000 / configTICK_RATE_HZ) )
-#ifdef __riscv64
+#if __riscv_xlen == 64
 	#define portBYTE_ALIGNMENT	8
 #else
 	#define portBYTE_ALIGNMENT	4

@@ -58,7 +58,7 @@ include ./Makefile.inc
 
 # Root of RISC-V tools installation. Note that we expect to find the spike
 # simulator header files here under $(RISCV)/include/spike .
-RISCV = /opt/riscv
+RISCV = /home/abhinaya/tools/riscv-tools/riscv
 
 FREERTOS_SRC = \
 	$(FREERTOS_SOURCE_DIR)/croutine.c \
@@ -100,7 +100,7 @@ INCLUDES = \
 CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin \
-	-D__gracefulExit -fPIC
+	-D__gracefulExit -mcmodel=medany #-fPIC
 
 GCCVER 	= $(shell $(GCC) --version | grep gcc | cut -d" " -f9)
 
@@ -118,7 +118,7 @@ OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ
 LDFLAGS	 = -T arch/link.ld -nostartfiles -static -nostdlib
 LIBS	 = -L$(CCPATH)/lib/gcc/$(TARGET)/$(GCCVER) \
 		   -L$(CCPATH)/$(TARGET)/lib \
-		   -lc
+		   -lc -lgcc
 
 %.o: %.c
 	@echo "    CC $<"
