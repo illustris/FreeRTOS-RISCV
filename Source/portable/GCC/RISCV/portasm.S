@@ -81,7 +81,8 @@
 # define REGBYTES 4
 #endif
 
-#define MSTATUS_PRV1 0x1800
+/* Enable interrupts when returning from the handler */
+#define MSTATUS_PRV1 0x1880
 
 .global portSAVE_CONTEXT
 .global portRESTORE_CONTEXT
@@ -288,6 +289,16 @@ vPortEndScheduler:
 	ret
 
 vPortYield:
+	/*
+	*  This routine can be called from outside of interrupt handler. This means
+	*  interrupts may be enabled at this point. This is probably okay for registers and
+	*  stack. However, "mepc" will be overwritten by the interrupt handler if a timer
+	*  interrupt happens during the yield. To avoid this, prevent interrupts before starting.
+	*  The write to mstatus in the restore context routine will enable interrupts after the
+	*  mret. A more fine-grain lock may be possible.
+	*/  
+	csrci mstatus, 8
+
 	portSAVE_CONTEXT
 	portSAVE_RA
 	jal	vTaskSwitchContext
