@@ -124,7 +124,7 @@ static void prvTaskExitError( void );
 
 /* Sets the next timer interrupt
  * Reads current timer register and adds tickrate
- * Does nothing if a Plic was not found in the hardware configuration string
+ * Does nothing if a Clint was not found in the hardware configuration string
  * Using previous timer compare may fail if interrupts were disabled for a long time,
  * which is likely for the very first interrupt. When that happens, compare timer + 
  * tickrate may already be behind current timer and prevent correctly programming
