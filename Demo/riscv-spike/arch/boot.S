@@ -175,10 +175,12 @@ interrupt:
 	/* Interupt is timer interrupt */
 	j		TIMER_CMP_INT
 	mret
+
 softwareInterrupt:
 	/* Interupt is software interrupt */
+	LOAD  t0, 0x0(sp)
+	addi  sp, sp, REGBYTES
 	mret
-
 
 /* For when a trap is fired */
 trap_entry:
