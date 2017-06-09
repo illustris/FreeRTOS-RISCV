@@ -127,14 +127,6 @@ SECTIONS {
         *(.sdata .sdata.* .gnu.linkonce.s.*)
      }	> dmem
 
-	.sbss2 : {
-	   __sbss2_start = .;
-	   *(.sbss2)
-	   *(.sbss2.*)
-	   *(.gnu.linkonce.sb2.*)
-	   __sbss2_end = .;
-	} > dmem
-
 	.data : {
 	   . = ALIGN(4);
 	   __data_start = .;

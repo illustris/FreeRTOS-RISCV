@@ -143,13 +143,6 @@ init_sbss:
     li	a2, 0x0
     jal	fill_block
 
-init_sbss2:
-    /* init bss section */
-    la	a0, __sbss2_start
-    la	a1, __sbss2_end
-    li	a2, 0x0
-    jal	fill_block
-
 write_stack_pattern:
     /* init bss section */
     la	a0, _stack_end  /* note the stack grows from top to bottom */
