@@ -165,7 +165,9 @@ init_stack:
 
 /* When trap is an interrupt, this function is called */
 interrupt:
-	srli	t0,t0,1
+	slli    t0,t0,1
+	srli    t0,t0,1
+	addi    t0,t0,-3
 	beq		t0,x0,softwareInterrupt
 	LOAD	t0, 0x0(sp)
 	addi	sp, sp, REGBYTES
