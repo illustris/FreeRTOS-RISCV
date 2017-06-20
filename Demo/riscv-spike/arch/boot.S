@@ -132,21 +132,21 @@ _mstart:
 init_bss:
     /* init bss section */
     la	a0, __bss_start
-    la	a1, __bss_end
+    la	a1, __bss_end-4
     li	a2, 0x0
     jal	fill_block
 
 init_sbss:
     /* init bss section */
     la	a0, __sbss_start
-    la	a1, __sbss_end
+    la	a1, __sbss_end-4
     li	a2, 0x0
     jal	fill_block
 
 write_stack_pattern:
     /* init bss section */
     la	a0, _stack_end  /* note the stack grows from top to bottom */
-    la	a1, __stack
+    la	a1, __stack-4
     li	a2, 0xABABABAB
     jal	fill_block
 
