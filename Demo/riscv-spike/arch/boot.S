@@ -132,28 +132,21 @@ _mstart:
 init_bss:
     /* init bss section */
     la	a0, __bss_start
-    la	a1, __bss_end
+    la	a1, __bss_end-4 /* section end is actually the start of the next section */
     li	a2, 0x0
     jal	fill_block
 
 init_sbss:
     /* init bss section */
     la	a0, __sbss_start
-    la	a1, __sbss_end
-    li	a2, 0x0
-    jal	fill_block
-
-init_sbss2:
-    /* init bss section */
-    la	a0, __sbss2_start
-    la	a1, __sbss2_end
+    la	a1, __sbss_end-4 /* section end is actually the start of the next section */
     li	a2, 0x0
     jal	fill_block
 
 write_stack_pattern:
     /* init bss section */
     la	a0, _stack_end  /* note the stack grows from top to bottom */
-    la	a1, __stack
+    la	a1, __stack-4   /* section end is actually the start of the next section */
     li	a2, 0xABABABAB
     jal	fill_block
 
@@ -165,7 +158,9 @@ init_stack:
 
 /* When trap is an interrupt, this function is called */
 interrupt:
-	srli	t0,t0,1
+	slli    t0,t0,1
+	srli    t0,t0,1
+	addi    t0,t0,-3
 	beq		t0,x0,softwareInterrupt
 	LOAD	t0, 0x0(sp)
 	addi	sp, sp, REGBYTES
@@ -173,10 +168,12 @@ interrupt:
 	/* Interupt is timer interrupt */
 	j		TIMER_CMP_INT
 	mret
+
 softwareInterrupt:
 	/* Interupt is software interrupt */
+	LOAD  t0, 0x0(sp)
+	addi  sp, sp, REGBYTES
 	mret
-
 
 /* For when a trap is fired */
 trap_entry:
