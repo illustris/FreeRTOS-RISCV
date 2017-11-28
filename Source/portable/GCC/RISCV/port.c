@@ -78,7 +78,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "configstring.h"
 
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -93,11 +92,15 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 BaseType_t xStartContext[31] = {0};
 #endif
 
-volatile uint64_t* mtime;
-volatile uint64_t* timecmp;
 
-void parse_config_string(void);
-static void query_rtc(const char* config_string);
+/*
+ * As of version 1.10, these addresses reflect the configuration of the 
+ * emulated SoC of the Spike RISC-V emulator with respect to the
+ * Machine Timer Registers mtime and mtimecmp
+ */
+#define CLINT_BASE  0x2000000
+volatile uint64_t* mtime =      (uint64_t*)(CLINT_BASE + 0xbff8);
+volatile uint64_t* timecmp =    (uint64_t*)(CLINT_BASE + 0x4000);
 
 
 /*
@@ -140,8 +143,6 @@ static void prvSetNextTimerInterrupt(void)
 /* Sets and enable the timer interrupt */
 void vPortSetupTimer(void)
 {
-    parse_config_string();
-
     /* reuse existing routine */
     prvSetNextTimerInterrupt();
 
@@ -214,25 +215,3 @@ void vPortSysTickHandler( void )
 	}
 }
 /*-----------------------------------------------------------*/
-
-static void query_rtc(const char* config_string)
-{
-  query_result res = query_config_string(config_string, "rtc{addr");
-  assert(res.start);
-  mtime = (void*)(uintptr_t)get_uint(res);
-}
-
-static void query_timecmp(const char* config_string)
-{
-    query_result res = query_config_string(config_string, "core{0{0{timecmp");
-    assert(res.start);
-    timecmp = (void*)(uintptr_t)get_uint(res);
-}
-
-void parse_config_string()
-{
-  uint32_t addr = *(uint32_t*)CONFIG_STRING_ADDR;
-  const char* s = (const char*)(uintptr_t)addr;
-  query_rtc(s);
-  query_timecmp(s);
-}

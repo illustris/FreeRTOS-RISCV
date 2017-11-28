@@ -174,6 +174,7 @@ TimerHandle_t xCheckTimer = NULL;
 /* See the description at the top of this file. */
 static void prvCheckTimerCallback(__attribute__ ((unused)) TimerHandle_t xTimer )
 {
+static int count = 0;
 unsigned long ulErrorFound = pdFALSE;
 
 	/* Check all the demo and test tasks to ensure that they are all still
@@ -200,14 +201,16 @@ unsigned long ulErrorFound = pdFALSE;
 	if( ulErrorFound != pdFALSE )
 	{
 		__asm volatile("li t6, 0xbeefdead");
-		printf("Error found! \r\n");
+		printf("One or more threads has exited! \r\n");
 	}else{
 		__asm volatile("li t6, 0xdeadbeef");
-		printf("PASS! \r\n");
+		printf("[%d] All threads still alive! \r\n", count++);
 	}
 
+    /* Do _not_ stop the scheduler; this would halt the system, but was left for reference on how to do so */
 	/* Stop scheduler */
-    vTaskEndScheduler();
+//    vTaskEndScheduler();
+
 }
 /*-----------------------------------------------------------*/
 
