@@ -92,18 +92,18 @@ uint64_t zeroExtend(long val)
 static uint64_t prvSyscallToHost(long which, long arg0, long arg1, long arg2)
 {
 	volatile uint64_t magic_mem[8] __attribute__((aligned(64)));
-    volatile uint64_t oldfromhost;
+//    volatile uint64_t oldfromhost;
 	magic_mem[0] = zeroExtend(which);
 	magic_mem[1] = zeroExtend(arg0);
 	magic_mem[2] = zeroExtend(arg1);
 	magic_mem[3] = zeroExtend(arg2);
 	__sync_synchronize();
     tohost = zeroExtend(magic_mem);
-    do
-    {
-        oldfromhost = fromhost;
-        fromhost = 0;
-    } while (oldfromhost == 0);
+//    do
+//    {
+//        oldfromhost = fromhost;
+//        fromhost = 0;
+//    } while (oldfromhost == 0);
 	return magic_mem[0];
 }
 /*-----------------------------------------------------------*/

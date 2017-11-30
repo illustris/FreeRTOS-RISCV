@@ -176,6 +176,7 @@ softwareInterrupt:
 	mret
 
 /* For when a trap is fired */
+.align 2
 trap_entry:
 	/* Check for interrupt */
 	addi	sp, sp, -REGBYTES
