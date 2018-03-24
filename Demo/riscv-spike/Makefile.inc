@@ -2,15 +2,16 @@
 
 RISCV_XLEN ?= 64
 RISCV_LIB  ?= elf
+RISCV ?= /opt/riscv
+CCPATH	= $(RISCV)
 
-TARGET=riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
+TARGET=$(CCPATH)/bin/riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 #-----------------------------------------------------------
 GCC		= $(TARGET)-gcc
 OBJCOPY	= $(TARGET)-objcopy
 OBJDUMP	= $(TARGET)-objdump
 AR		= $(TARGET)-ar
 RANLIB	= $(TARGET)-ranlib
-CCPATH	= /home/maarten.in_t.hout/riscv-build
 
 PROG	= riscv-spike
 CRT0	= arch/boot.S
