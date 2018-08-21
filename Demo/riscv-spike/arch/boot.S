@@ -187,7 +187,7 @@ trap_entry:
 	addi	sp, sp, REGBYTES
 
 	/* System call and other traps */
-	addi sp, sp, -REGBYTES*31
+	addi sp, sp, -REGBYTES*32
 	STORE x1, 1*REGBYTES(sp)
 	STORE x2, 2*REGBYTES(sp)
 	STORE x3, 3*REGBYTES(sp)
@@ -261,7 +261,7 @@ trap_entry:
 	LOAD x30, 30*REGBYTES(sp)
 	LOAD x31, 31*REGBYTES(sp)
 
-	addi sp, sp, REGBYTES*31
+	addi sp, sp, REGBYTES*32
 	mret
 
 /* Fills memory blocks */
