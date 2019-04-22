@@ -1,3 +1,10 @@
+# OBSOLETE
+This repository is no longer maintained, as RISC-V support was officially added to FreeRTOS.
+- [FreeRTOS homepage](https://www.freertos.org/)
+- [FreeRTOS ports](https://www.freertos.org/RTOS_ports.html)
+- [Upstream repository](https://sourceforge.net/projects/freertos/)
+- [Quickstart guide](https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html#RISC_V_QUICK_START)
+
 # FreeRTOS for RISC-V
 
 This is a port of FreeRTOS to RISC-V
